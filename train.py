@@ -1,3 +1,4 @@
+import os
 import sys
 import torch
 import seaborn as sns
@@ -5,21 +6,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import List, Optional, Any
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from IPython.display import clear_output
 from tqdm.notebook import tqdm
-# import segmentation_models_pytorch as smp
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 from PIL import Image
 
 import gc
 
-gc.collect()
-torch.cuda.empty_cache()
-
-sns.set_style('whitegrid')
-plt.rcParams.update({'font.size': 15})
+# sns.set_style('whitegrid')
+# plt.rcParams.update({'font.size': 15})
 
 def plot_losses(train_losses: List[float], val_losses: List[float]):
     """
@@ -97,7 +94,7 @@ def training_epoch(model, optimizer: torch.optim.Optimizer, criterion: nn.Module
         train_loss += loss.item()
 
 
-    train_loss /= len(loader.dataset)
+    train_loss /= len(loader)
     return train_loss
 
 
@@ -134,7 +131,7 @@ def validation_epoch(model, criterion: nn.Module,
         val_loss += loss.item()
 
 
-    val_loss /= len(loader.dataset)
+    val_loss /= len(loader)
     return val_loss
 
 
@@ -151,9 +148,16 @@ def train(model, optimizer: torch.optim.Optimizer, scheduler: Optional[Any],
     :param num_epochs: number of training epochs
     :param num_examples: number of generation examples to print after each epoch
     """
+    checkpoint_dir = "checkpoints"
+    os.makedirs(checkpoint_dir, exist_ok=True)
+    best_val_loss = float('inf')
     train_losses, val_losses = [], []
     criterion = nn.CrossEntropyLoss(ignore_index=255)
     device = next(model.parameters()).device
+    print(device, type(device))
+    if torch.cuda.is_available():
+        gc.collect()
+        torch.cuda.empty_cache()
 
     for epoch in range(1, num_epochs + 1):
         train_loss = training_epoch(
@@ -170,6 +174,14 @@ def train(model, optimizer: torch.optim.Optimizer, scheduler: Optional[Any],
 
         train_losses += [train_loss]
         val_losses += [val_loss]
+
+        if  val_loss < best_val_loss:
+            best_val_loss = val_loss
+            best_path = os.path.join(checkpoint_dir, f"unet_best.pt")
+            torch.save(model.state_dict(), best_path)
+
+    last_path = os.path.join(checkpoint_dir, f"unet_last.pt")
+    torch.save(model.state_dict(), last_path)
     plot_losses(train_losses, val_losses)
 
  
