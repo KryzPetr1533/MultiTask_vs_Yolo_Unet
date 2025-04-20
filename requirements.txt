@@ -1,0 +1,11 @@
+nuscenes-devkit
+torch 
+torchvision 
+torchaudio
+matplotlib
+seaborn
+pillow
+numpy
+segmentation-models-pytorch
+ultralytics
+ipython
