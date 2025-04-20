@@ -71,9 +71,7 @@ def training_epoch(model, optimizer: torch.optim.Optimizer, criterion: nn.Module
             if "encoder" in name:
                 param.requires_grad  = False
 
-    disable_tqdm = not sys.stdout.isatty()
-
-    for indices, (images, masks) in enumerate(tqdm(loader, desc=tqdm_desc, disable=disable_tqdm)):
+    for indices, (images, masks) in enumerate(tqdm(loader, desc=tqdm_desc)):
         """
         Process one training step: calculate loss,
         call backward and make one optimizer step.
@@ -183,45 +181,3 @@ def train(model, optimizer: torch.optim.Optimizer, scheduler: Optional[Any],
     last_path = os.path.join(checkpoint_dir, f"unet_last.pt")
     torch.save(model.state_dict(), last_path)
     plot_losses(train_losses, val_losses)
-
- 
-    # model.eval()
-    # with torch.no_grad():
-    #     for image, mask in test_loader:  # Assuming test_loader returns PIL Images or similar
-    #         # If test_loader returns a tuple (image, …) then extract the image appropriately.
-    #         # For example: image, _ = image_tuple
-    #         inference_transform = transforms.Compose([
-    #             transforms.Resize((256, 256), interpolation=Image.BILINEAR),  # if needed
-    #             transforms.ToTensor(),
-    #             transforms.Normalize(mean=[0.485, 0.456, 0.406], 
-    #                                 std=[0.229, 0.224, 0.225])
-    #         ])
-    #         # Apply minimal preprocessing
-    #         img_tensor = inference_transform(image).unsqueeze(0).to(device)
-            
-    #         # Forward pass
-    #         output = model(img_tensor)
-    #         pred_mask = torch.argmax(output, dim=1).squeeze(0)  # shape: (H, W)
-            
-    #         # Optionally, you can resize the prediction back to the original size if needed
-    #         # For full-resolution display, use F.interpolate with nearest mode:
-    #         orig_size = image.size[::-1]  # PIL image size returns (width, height)
-    #         pred_mask_resized = torch.nn.functional.interpolate(
-    #               pred_mask.unsqueeze(0).unsqueeze(0).float(), size=orig_size, mode='nearest'
-    #         ).squeeze()
-            
-    #         fig, axs = plt.subplots(1, 2, figsize=(15, 10))
-            
-    #         # Ground Truth Overlay
-    #         axs[0].imshow(image)
-    #         axs[0].imshow(mask, cmap='jet', alpha=0.5)
-    #         axs[0].set_title('Ground Truth Overlay')
-    #         axs[0].axis('off')
-            
-    #         # Prediction Overlay
-    #         axs[1].imshow(image)
-    #         axs[1].imshow(pred_mask_resized.cpu().numpy(), cmap='jet', alpha=0.5)
-    #         axs[1].set_title('Prediction Overlay')
-    #         axs[1].axis('off')
-            
-    #         plt.show()

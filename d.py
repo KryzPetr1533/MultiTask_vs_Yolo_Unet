@@ -31,14 +31,16 @@ if __name__ == "__main__":
         cmd = ["docker", "run",
                "--rm", "-it",
                "--network", "host",
-               "--gpus", "all",
+            #    "--gpus", "all",
             #    "--device", "/dev/video" + args.cam1_ind,
             #    "--device", "/dev/video" + args.cam2_ind,
                "--hostname", args.hostname,
             #    "-e", f"DISPLAY={display_env}",
             #    "-e", "QT_X11_NO_MITSHM=1",
                "-v", ".:/ros",
-               "-v", "/var/tmp/cityscapes:/var/cityscapes",
+               "-v", "/var/tmp/nuImages:/var/nuImages",
+
+            #    "-v", "/var/tmp/cityscapes:/var/cityscapes",
             #    "-v", "/tmp/.X11-unix:/tmp/.X11-unix:rw",
                "--name", args.name,
                args.image
