@@ -1,0 +1,6 @@
+[console_scripts]
+detector = obstacle_detector.detector:main
+image_retriever = obstacle_detector.image_retriever:main
+metrics = obstacle_detector.metrics:main
+segmentor = obstacle_detector.segmentor:main
+

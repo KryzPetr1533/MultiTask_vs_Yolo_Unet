@@ -1,0 +1,17 @@
+package.xml
+setup.cfg
+setup.py
+launch/pipeline_launch.py
+obstacle_detector/__init__.py
+obstacle_detector/detector.py
+obstacle_detector/image_retriever.py
+obstacle_detector/metrics.py
+obstacle_detector/segmentor.py
+obstacle_detector.egg-info/PKG-INFO
+obstacle_detector.egg-info/SOURCES.txt
+obstacle_detector.egg-info/dependency_links.txt
+obstacle_detector.egg-info/entry_points.txt
+obstacle_detector.egg-info/requires.txt
+obstacle_detector.egg-info/top_level.txt
+obstacle_detector.egg-info/zip-safe
+resource/obstacle_detector

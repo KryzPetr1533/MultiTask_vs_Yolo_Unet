@@ -1,6 +1,6 @@
-path: /var/tmp/full_nuImages/
-train: v1.0-mini/images/train
-val: v1.0-mini/images/val
+path: /var/tmp/full_nuImages
+train: v1.0-train/images/train
+val: v1.0-val/images/val
 nc: 25
 names:
 - animal
