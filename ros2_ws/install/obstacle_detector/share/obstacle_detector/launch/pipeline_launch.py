@@ -1,0 +1,1 @@
+/ros2_ws/build/obstacle_detector/launch/pipeline_launch.py

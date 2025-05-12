@@ -1,0 +1,13 @@
+Pillow
+catkin-pkg
+colcon-common-extensions
+cv_bridge
+numpy
+nuscenes-devkit
+opencv-python
+rosdep
+rosdistro
+rospkg
+segmentation-models-pytorch
+setuptools
+vcstool
