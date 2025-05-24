@@ -39,7 +39,7 @@ def process_sample(job, nuim_dataroot, output_label_dir, output_image_dir, cat_t
 
 def main(version='v1.0-mini', split='train', num_workers=None):
     nuim = NuImages(
-        dataroot='/var/tmp/full_nuImages',
+        dataroot='/var/tmp/MultiTask_vs_Yolo_Unet/full_nuImages',
         version=version,
         verbose=True
     )
@@ -53,10 +53,11 @@ def main(version='v1.0-mini', split='train', num_workers=None):
     anns_by_token = {}
     for ann in nuim.object_ann:
         anns_by_token.setdefault(ann['sample_data_token'], []).append(ann)
+    
 
     # 2) Pre-map category_token → class_id
     cat_token_to_id = {
-        cat['token']: idx
+        cat['token']: idx 
         for idx, cat in enumerate(nuim.category)
     }
 
@@ -93,6 +94,7 @@ def main(version='v1.0-mini', split='train', num_workers=None):
 
 if __name__ == '__main__':
     # Write train labels
-    main(version='v1.0-train', split='train')
-    # Write val labels
-    main(version='v1.0-val',   split='val')
+    # main(version='v1.0-train', split='train')
+    # # Write val labels
+    # main(version='v1.0-val',   split='val')
+    main(version='v1.0-test',   split='test')
