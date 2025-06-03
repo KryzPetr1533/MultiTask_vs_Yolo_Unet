@@ -19,7 +19,6 @@ def compute_segmentation_metrics(outputs: torch.Tensor,
                                  masks: torch.Tensor,
                                  num_classes: int) -> Dict[str, float]:
     preds = torch.argmax(outputs, dim=1)
-    # Exclude ignored pixels from metric computation
     valid_mask = masks != IGNORE_INDEX
     running_iou, running_dice = 0.0, 0.0
     for cls in range(num_classes):
@@ -87,7 +86,7 @@ def training_epoch(model: nn.Module,
     total_batches = 0
     disable_tqdm = not sys.stdout.isatty()
     for images, masks in tqdm(loader, desc=tqdm_desc, disable=disable_tqdm):
-        images, masks = images.to(device), masks.to(device)
+        images, masks = images.to(device, non_blocking=True), masks.to(device, non_blocking=True)
         # Remap any invalid mask labels to IGNORE_INDEX
         masks = masks.clone()
         masks[(masks < 0) | (masks >= num_classes)] = IGNORE_INDEX
@@ -123,7 +122,7 @@ def validation_epoch(model: nn.Module,
     total_batches = 0
     disable_tqdm = not sys.stdout.isatty()
     for images, masks in tqdm(loader, desc=tqdm_desc, disable=disable_tqdm):
-        images, masks = images.to(device), masks.to(device)
+        images, masks = images.to(device, non_blocking=True), masks.to(device, non_blocking=True)
         # Remap invalid labels
         masks = masks.clone()
         masks[(masks < 0) | (masks >= num_classes)] = IGNORE_INDEX
@@ -147,7 +146,6 @@ def train(model: nn.Module,
           scheduler: Optional[Any],
           train_loader: DataLoader,
           val_loader: DataLoader,
-          test_loader: DataLoader,
           num_epochs: int,
           num_classes: int,
           checkpoint_dir: str = './checkpoints',
@@ -163,7 +161,7 @@ def train(model: nn.Module,
     }
     criterion = nn.CrossEntropyLoss(ignore_index=IGNORE_INDEX)
 
-    for epoch in tqdm(range(1, num_epochs + 1), desc='Epochs'):
+    for epoch in range(1, num_epochs + 1):
         tl, tm = training_epoch(
             model, optimizer, criterion, train_loader,
             num_classes, f'Train {epoch}/{num_epochs}', freeze_encoder
