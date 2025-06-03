@@ -38,6 +38,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'camera_publisher = obstacle_detector.camera_publisher:main',
             'image_retriever = obstacle_detector.image_retriever:main',
             'detector        = obstacle_detector.detector:main',
             'segmentor = obstacle_detector.segmentor:main',
